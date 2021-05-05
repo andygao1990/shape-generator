@@ -24,11 +24,21 @@
         flex-wrap: wrap;
       }
 
-      #container > div {
+      #container > div.circle {
         background-color: tomato;
         width: 75px;
         height: 75px;
         border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #container > div.square {
+        background-color: tomato;
+        width: 75px;
+        height: 75px;
+        border-radius: 0%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -48,7 +58,7 @@
     <title>Shape Generator</title>
   </head>
   <body>
-    <h1><a href='index.html'>Shape Generator</a></h1>
+    <h1><a href='index.html'>Shape Generator </a> </h1>
     <h2>Todos</h2>
     <ul>
       <li>Create a repo named shape-generator and add this index.html page</li>
@@ -68,7 +78,7 @@
     </ul>
     <a href='https://github.com/FullstackAcademy/shape-generator'>Repo</a>
     <form>
-      <input name='px' value='25'/>
+      <input name='px' value='25' type = 'number'/>
     </form>
     <div id='container'>
     </div>
@@ -77,36 +87,62 @@
       const input = form.querySelector('input');
       const link = document.querySelector('a');
       const container = document.querySelector('#container');
+      const h1 = document.querySelector('h1')
 
       container.addEventListener('click', (ev)=>{
-        if(!ev.target.id){
-          ev.target.parentNode.removeChild(ev.target);
+
+        if(!ev.target.id && ev.target.tagName === "SPAN"){
+          container.removeChild(ev.target.parentNode);
         }
+        if(!ev.target.id && ev.target.tagName === "DIV") {
+          container.removeChild(ev.target)
+        }
+        countAndAverage()
       });
 
-      const generateCircle = ()=> {
+      const generateShape = ()=> {
         const size = `${input.value}px`;
-        const circle = document.createElement('div');
-        circle.style.width = size;
-        circle.style.height = size;
-        container.appendChild(circle);
+        const shape = document.createElement('div')
+        if(1 + Math.floor(Math.random()*2) === 1){
+          shape.classList.add('circle')
+        } else {
+          shape.classList.add('square');
+        }
+        shape.style.width = size;
+        shape.style.height = size;
+        container.appendChild(shape);
         const span = document.createElement('span');
         span.innerText = input.value;
-        circle.appendChild(span);
-        input.value = 25 + Math.floor(Math.random()*50);
+        shape.appendChild(span);
+        input.value = 25 + Math.floor(Math.random()*225);
         window.setTimeout(function(){
-          circle.classList.add('blue');
+          shape.classList.add('blue');
         }, 500);
       };
 
       form.addEventListener('submit', (ev)=> {
         ev.preventDefault();
-        generateCircle();
+        if (input.value >= 25 && input.value <= 250) {
+          generateShape();
+        }
+        countAndAverage()
+      
       });
 
-      generateCircle();
-      generateCircle();
-      generateCircle();
+      const countAndAverage = () => {
+        const count = document.querySelectorAll('#container > div').length
+        // Don't know how to calculate the sum of all spans' innertext
+        const average = parseInt(document.querySelectorAll('#container span').innertext) / document.querySelectorAll('#container span').length
+        console.log(document.querySelectorAll('#container span'))
+        // Don't know how to keep "Shape Generator" as a link
+        h1.innerHTML = `Shape Generator` + ` Count = ${count}; Average: ${average}`
+      }
+
+      generateShape();
+      generateShape();
+      generateShape();
+      countAndAverage()
+
 
     </script>
   </body>
